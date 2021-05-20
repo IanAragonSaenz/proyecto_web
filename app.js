@@ -19,7 +19,8 @@ client.connect(err => {
 	collection = client.db("cartDB").collection("products"); 
 });
 
-app.get('/', (req, res) => {
+//pages loading backend
+app.get('/cart', (req, res) => {
     res.sendFile("./shopping-cart.html", {root: __dirname});    
 });
 
@@ -27,13 +28,11 @@ app.get('/add', (req, res) => {
     res.sendFile("./add.html", {root: __dirname});    
 });
 
-app.post('/edit-product', (req, res) => {
-	res.sendFile("./edit-product.html", {root: __dirname});  ;  
-	console.log("what");
-	
+app.post('/edit', (req, res) => {
+	res.sendFile("./edit-product.html", {root: __dirname}); 
 });
 
-app.route('/:id/edit').get((req, res) => {
+app.route('/product/:id/edit').get((req, res) => {
     let productId  = req.params.id;
     ejs.renderFile("./edit-product.html", {productId: productId}, null, function(err, str){
         if (err) res.status(503).send(`error when rendering the view: ${err}`); 
@@ -43,6 +42,20 @@ app.route('/:id/edit').get((req, res) => {
     });
 });
 
+/*
+products/:id delete method: To remove a product from the database. --
+
+users/create post method: To create a new user in the database.
+users/:id get method: To get the data of a user
+users/:id put method: To modify the data of a user
+users/:id delete method: To delete a user
+
+/login
+/logout
+/completePurchase
+*/
+
+//products backend
 app.route('/product/:id').put((req, res) => {
     let productId  = req.params.id;
     let{ name, price, brand} = req.body;
@@ -80,7 +93,7 @@ app.post('/removeProduct', function (req, res) {
 })
 
 
-app.post('/addProduct', function (req, res) {
+app.post('/product/create', function (req, res) {
 
     let nameParam = req.query.name;
 	let priceParam = req.query.price;
@@ -95,8 +108,10 @@ app.post('/addProduct', function (req, res) {
 		console.log("1 document inserted");
 	});
 
-  })
+ })
 
+
+//users backend
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

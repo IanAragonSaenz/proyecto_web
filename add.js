@@ -26,7 +26,7 @@ function addProduct(event){
     }
     
     let product = new Product(name, parseFloat(price), brand);
-	let url = 'http://127.0.0.1:3000/addProduct?name=' + product.name + '&price=' + product.price + '&brand=' + product.brand;
+	let url = 'http://127.0.0.1:3000//product/create?name=' + product.name + '&price=' + product.price + '&brand=' + product.brand;
 	
 	var addProduct = new XMLHttpRequest();
 	addProduct.onreadystatechange = function() {
