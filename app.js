@@ -70,10 +70,10 @@ users/:id delete method: To delete a user
 */
 
 
-app.post('/login', function (req, res) {
+app.post('/login', async function (req, res) {
     const { email, password } = req.body;
-    const user = users.findOne(); 
-    console.log(user);
+    const user = await users.findOne({email: email});
+    
     if(user.password != password){res.status(403).send('Invalid credentials'); return; }
     
     if (user) {
