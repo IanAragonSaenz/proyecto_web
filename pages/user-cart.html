@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <style>
+     body{
+      background-image: linear-gradient(to top, #778899 , #2F4F4F);
+      height: 100%;
+      margin: 12px;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      }
+
+    html{
+      height: 100%;
+    }
+
+    h1{
+      font-size: 300%;
+      font-family: "Lucida Console", Monaco, monospace;
+      color: white;
+    }
+
+    h2{
+      color: white;
+    }
+
+    h3{
+      color: #F8F8FF;
+      font-size: 200%;
+    }
+
+    ul{
+      padding: 40px;
+    }
+
+    li{
+      color: #F0F8FF;
+      text-transform: capitalize;
+      font-size: 150%;
+      font-family: "Lucida Console", Monaco, monospace;
+    }
+
+    button{
+      background-color: #1E90FF;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+    button:hover{
+      opacity: 0.5;
+    }
+
+    .addButton{
+      background-color: #9932CC;
+      border: none;
+      color: #F0F8FF;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      transition-duration: 0.4s;
+    }
+
+    .removeButton{
+      background-color: #8B0000;
+      border: none;
+      color: #F0F8FF;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+  </style>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product-Store</title>
+</head>
+<body>
+    <h1>Store</h1>
+
+    <h2>Shopping cart</h2>
+    <ul id="cart">
+    </ul>
+    <h3 id="total">Total: $0.00</h3>
+    
+	<button id="btn" class = "addButton">Add</button>
+    <script type="application/javascript" src="../cart.js"></script>
+</body>
+</html>
