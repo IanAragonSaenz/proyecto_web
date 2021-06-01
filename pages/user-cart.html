@@ -109,7 +109,7 @@
           clearCart();
         } 
       } 
-      getProducts.open("GET", 'http://127.0.0.1:3000/clear/${userId}', true);
+      getProducts.open("POST", `http://127.0.0.1:3000/clear/${userId}`, true);
       getProducts.send();
     });
       
@@ -137,7 +137,7 @@
         updateTotal();
       } 
     }
-    getProducts.open("GET", 'http://127.0.0.1:3000/cart/${userId}', true);
+    getProducts.open("GET", `http://127.0.0.1:3000/cart/${userId}`, true);
     getProducts.send();
 
 
@@ -162,11 +162,6 @@
           updateTotal();
         });
       
-        btnEdit = document.createElement("button");
-            btnEdit.appendChild(document.createTextNode("Edit"));
-            btnEdit.addEventListener("click", ()=>{
-            window.location.replace('http://127.0.0.1:3000/' + product.id + '/edit');
-        });
 
         let eguzz = document.createElement('br');
         li.appendChild(namePart);
@@ -177,7 +172,6 @@
         li.appendChild(brandPart);
         li.appendChild(eguzz);
         li.appendChild(btnRemove);
-        li.appendChild(btnEdit);
         li.appendChild(document.createElement('br'));
         li.appendChild(document.createElement('br'));
 
@@ -188,7 +182,7 @@
     function removeProductFromCart(product){
       // find the element
       let idx = products.indexOf(product);
-      let url = 'http://127.0.0.1:3000/cart/${userId}/?id=' + product.id;
+      let url = `http://127.0.0.1:3000/cart/${userId}/${product.id}`;
       
       var deleteProduct = new XMLHttpRequest();
       deleteProduct.onreadystatechange = function() {

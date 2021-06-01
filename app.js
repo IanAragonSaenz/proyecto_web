@@ -52,7 +52,7 @@ app.get('/register', function (req, res) {
 });
 
 app.get('/cart', requireLogin, function (req, res) {
-    ejs.renderFile('./products.html', {user: req.user}, null, function(err, str){
+    ejs.renderFile('./pages/user-cart.html', {user: req.user}, null, function(err, str){
         if (err) res.status(503).send(`error when rendering the view: ${err}`); 
         else {
             res.end(str);
@@ -127,6 +127,36 @@ app.get('/users/:id', requireLogin, async function(req, res) {
 	});	
 })
 
+app.post('/clear/:id', requireLogin, async function(req, res) {
+    let uid  = req.params.id;
+    cart.delete({uid: uid});
+})
+
+app.get('/cart/:id', requireLogin, async function(req, res) {
+    let uid  = req.params.id;
+    products = [];
+    let c = await cart.find({uid: uid}).toArray();
+     
+    for(const p of c) {
+        let pid = new mongo.ObjectID(p.pid);
+        let pro = await collection.findOne({_id: pid});
+        products.push(pro);
+    };
+    
+    res.send(products);
+})
+
+app.get('/cart/:id/:pid', requireLogin, async function(req, res) {
+    let uid  = req.params.id;
+    let pid  = req.params.pid;
+    let user = await users.find().toArray();
+	user.forEach(u => {
+		if(u._id == uid){
+			res.send(u);
+		}
+	});	
+})
+
 app.post('/user/register', upload.single('avatar'), (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
@@ -161,6 +191,8 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 		console.log("1 document inserted");
 	});
 });
+
+
 
 app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req, res){
     let uid  = new mongo.ObjectID(req.params.id);
