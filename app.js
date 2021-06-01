@@ -129,7 +129,11 @@ app.get('/users/:id', requireLogin, async function(req, res) {
 
 app.post('/clear/:id', requireLogin, async function(req, res) {
     let uid  = req.params.id;
-    cart.delete({uid: uid});
+    cart.deleteMany({uid: uid}, function(err, obj) {
+		if (err) throw err;
+		console.log("documents deleted");
+        res.send(200);
+	});
 })
 
 app.get('/cart/:id', requireLogin, async function(req, res) {
@@ -146,15 +150,13 @@ app.get('/cart/:id', requireLogin, async function(req, res) {
     res.send(products);
 })
 
-app.get('/cart/:id/:pid', requireLogin, async function(req, res) {
+app.post('/cart/:id/:pid', requireLogin, async function(req, res) {
     let uid  = req.params.id;
     let pid  = req.params.pid;
-    let user = await users.find().toArray();
-	user.forEach(u => {
-		if(u._id == uid){
-			res.send(u);
-		}
-	});	
+    cart.deleteOne({uid: uid, pid: pid}, function(err, obj) {
+		if (err) throw err;
+		console.log("1 document deleted");
+	});
 })
 
 app.post('/user/register', upload.single('avatar'), (req, res) => {
@@ -195,7 +197,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 
 
 app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req, res){
-    let uid  = new mongo.ObjectID(req.params.id);
+    let uid  = req.params.id;
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
@@ -218,9 +220,8 @@ app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req
         }
     })
 
-    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }},  function(err, res) {
+    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
 		if (err) throw err;
-		console.log(name);
 		console.log("1 document updated");
 	});
 });
@@ -243,7 +244,7 @@ app.post('/login', async function (req, res) {
 });
 
 app.post('/logout', requireLogin, function(req, res){
-    console.log(`Logging out ${req.username}`)
+    console.log(`Logging out ${req.name}`)
     res.clearCookie('authorization');
     res.send('User logged out');
 });

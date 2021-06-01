@@ -107,6 +107,8 @@
       getProducts.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200 && this.responseText != "") {
           clearCart();
+          products = [];
+          updateTotal();
         } 
       } 
       getProducts.open("POST", `http://127.0.0.1:3000/clear/${userId}`, true);
