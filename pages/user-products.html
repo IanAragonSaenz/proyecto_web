@@ -94,8 +94,9 @@
       <ul id="cart">
       </ul>
 
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-      const userId = '<%= userId %>';
+      const userId = '<%= user.id %>';
       const cart = document.getElementById("cart");
       const totalLabel = document.getElementById("total");
         
@@ -140,16 +141,17 @@
           btnAdd = document.createElement("button");
           btnAdd.appendChild(document.createTextNode("Add"));
           btnAdd.addEventListener("click", ()=>{
-            let url = `http://127.0.0.1:3000/product/add/${userId}/product/?productId=` + product.id;
-        
-            var addProduct = new XMLHttpRequest();
-            addProduct.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200 && this.responseText != "") {
-                console.log(this.responseText);		
-              } 
-            }
-            addProduct.open("POST", url, true);
-            addProduct.send();
+            const formData = new FormData();
+            formData.append('productId', product.id);
+            axios.post(`http://127.0.0.1:3000/product/add/${userId}/${product.id}`, formData)
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.log(error.response.data)
+                alert(`Problem when adding product ${error.response.data}`);
+            });
+
           });
         
 

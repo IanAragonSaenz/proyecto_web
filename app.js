@@ -71,7 +71,12 @@ app.get('/', requireLogin, function (req, res) {
 });
 
 app.get('/products', requireLogin, function(req, res) {
-    res.sendFile("./pages/user-products.html", {root: __dirname});    
+    ejs.renderFile('./pages/user-products.html', {user: req.user}, null, function(err, str){
+        if (err) res.status(503).send(`error when rendering the view: ${err}`); 
+        else {
+            res.end(str);
+        }
+    });  
 });
 
 app.get('/all/products', requireLogin, async function(req, res){  
@@ -79,12 +84,13 @@ app.get('/all/products', requireLogin, async function(req, res){
     res.send(products);
 });
 
-app.post('/product/add/:id/product', requireLogin, async function(req, res){  
+app.post('/product/add/:id', requireLogin, async function(req, res){  
     let userId  = req.params.id;
-    let productId  = req.query.id;
+    let pid = req.body.productId;
+    console.log(req.body);
     cart.insertOne({
 		uid: userId,
-		pid: productId
+		pid: pid
 	}, function(err, res) {
 		if (err) throw err;
 		console.log("1 document inserted");
@@ -154,6 +160,35 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 	}, function(err, res) {
 		if (err) throw err;
 		console.log("1 document inserted");
+	});
+});
+
+app.post('/users/:id', upload.single('avatar'), (req, res) => {
+    let name = req.body.name;
+    let email = req.body.email;
+    let password = req.body.password;
+
+    avatarObject = {
+        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+        contentType: 'image/jpg'
+    };
+
+    bcrypt.genSalt(10, function (saltError, salt) {
+        if (saltError) {
+          return;
+        } else {
+          bcrypt.hash(password, salt, function(hashError, hash) {
+            if (hashError) {
+              return;
+            }
+            password = hash
+          })
+        }
+    })
+
+    users.update({_id: req.user.id},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
+		if (err) throw err;
+		console.log("1 document updated");
 	});
 });
 
