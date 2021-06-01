@@ -51,7 +51,7 @@ app.get('/register', function (req, res) {
     res.sendFile('register.html', {root: './pages/'});
 });
 
-app.get('/products', requireLogin, function (req, res) {
+app.get('/cart', requireLogin, function (req, res) {
     ejs.renderFile('./products.html', {user: req.user}, null, function(err, str){
         if (err) res.status(503).send(`error when rendering the view: ${err}`); 
         else {
@@ -74,16 +74,21 @@ app.get('/products', requireLogin, function(req, res) {
     res.sendFile("./pages/user-products.html", {root: __dirname});    
 });
 
-app.get('/products', requireLogin, async function(req, res){  
+app.get('/all/products', requireLogin, async function(req, res){  
     let products = await collection.find().toArray(); 
     res.send(products);
 });
 
-app.post('/product/add/:id', requireLogin, async function(req, res){  
+app.post('/product/add/:id/product', requireLogin, async function(req, res){  
     let userId  = req.params.id;
     let productId  = req.query.id;
-    let products = await collection.find().toArray(); 
-    res.send(products);
+    cart.insertOne({
+		uid: userId,
+		pid: productId
+	}, function(err, res) {
+		if (err) throw err;
+		console.log("1 document inserted");
+	});
 });
 
 app.post('/removeProduct', requireLogin, function(req, res) {
@@ -106,6 +111,16 @@ users/:id delete method: To delete a user
 
 /completePurchase
 */
+
+app.get('/users/:id', requireLogin, async function(req, res) {
+    let uid  = req.params.id;
+    let user = await users.find().toArray();
+	user.forEach(u => {
+		if(u._id == uid){
+			res.send(u);
+		}
+	});	
+})
 
 app.post('/user/register', upload.single('avatar'), (req, res) => {
     let name = req.body.name;

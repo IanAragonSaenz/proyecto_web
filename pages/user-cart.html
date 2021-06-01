@@ -109,7 +109,7 @@
           clearCart();
         } 
       } 
-      getProducts.open("GET", "http://127.0.0.1:3000/clear/${userId}", true);
+      getProducts.open("GET", 'http://127.0.0.1:3000/clear/${userId}', true);
       getProducts.send();
     });
       
@@ -137,7 +137,7 @@
         updateTotal();
       } 
     }
-    getProducts.open("GET", "http://127.0.0.1:3000/cart/${userId}", true);
+    getProducts.open("GET", 'http://127.0.0.1:3000/cart/${userId}', true);
     getProducts.send();
 
 
