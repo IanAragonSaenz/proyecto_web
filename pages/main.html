@@ -7,18 +7,47 @@
   <title>Main page</title>
 </head>
 <body>
+    <input type="button" value="Cart" id="Cart"/>
     <h1>Welcome</h1>
-    Welcome <%= user.username %>, you are an <%= user.role %>
-    <h2>Edit your details</h2>>
-    To be developed.
+    Welcome <%= user.name %>, you are an <%= user.role %>
+
+    <h2>Edit your details</h2>
+    <form>
+        <label for="txtName">Name:</label>
+        <input type="text" id="txtName"><br>
+
+        <label for="txtEmail">Email:</label>
+        <input type="email" id="txtEmail"><br>
+
+        <label for="txtPassword">Password:</label>
+        <input type="password" id="txtPassword"><br>
+
+        <label for="imgAvatar">Current avatar:</label>
+        <img id="imgAvatar"><br>
+        <br>
+
+        <label for="avatarImage">Update avatar image</label>
+        <input type="file" id="avatarImage" name="avatarImage" value="Select image">
+        <br>
+        <input type="submit" id="submit" value="Edit user"> 
+    </form>
+
     <h2>Log out</h2>
     <input type="button" value="logout" id="logout" />
     
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>       
         const btnLogout = document.getElementById('logout');
+        const btnCart = document.getElementById('Cart');
+        const userId = '<%= user._id %>';
+        console.log('<%= user.email %>')
+        const txtName = document.getElementById('txtName');
+        const txtEmail = document.getElementById('txtEmail');
+        const txtPassword = document.getElementById('txtPassword');
+        const imgAvatar = document.getElementById('imgAvatar');
+
         btnLogout.addEventListener("click", (e) => {
-            axios.post('http://127.0.0.1:3000/logout') // No params, the cookie handles it all
+            axios.post('http://127.0.0.1:3000/logout') 
             .then(response => {
                 console.log(response);
                 alert(`You have been logged out, you are being redirected`);
@@ -29,6 +58,56 @@
                 alert(`Error: ${error.response.data}`);
             });
         });
+
+        btnCart.addEventListener("click", (e) => {
+            alert(`You are moving to the cart`);
+            window.location.replace('http://127.0.0.1:3000/cart');
+           
+        });
+
+        loadUserData();
+        
+        const btnSubmit = document.getElementById('submit');
+        btnSubmit.addEventListener("click", (e) => {
+            e.preventDefault();
+            
+            let name = txtName.value.trim();
+            let email = txtEmail.value.trim();
+            let password = txtPassword.value;
+
+            if (name === '') { alert('Input your name'); return; }
+            if (email ==='') { alert('Input your email'); return; }
+            if (password ==='') { alert('Input your password'); return; }
+            
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('email', email);
+            formData.append('password', password);
+            const files = avatarImage.files;
+            formData.append('avatar', files[0])
+
+            axios.put(`http://127.0.0.1:3000/user/${userId}`, formData)
+            .then(response => {
+                console.log(response);
+                alert(`User updated successfully`);
+            })
+            .catch(error => {
+                console.log(error.response.data)
+                alert(`Problem when updating user ${error.response.data}`);
+            });
+        });
+
+        function loadUserData(){
+            txtName.value = '<%= user.name %>';
+            txtEmail.value = '<%= user.email %>';
+            txtPassword.value = 'secret';
+
+            let stringValue = "data:image/jpg;base64," + (user.avatar.data);
+            imgAvatar.setAttribute('height', 200);
+            imgAvatar.setAttribute('width', 200);
+            imgAvatar.setAttribute('src', stringValue);
+        }
+        
     </script>
 </body>
 </html>

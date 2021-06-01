@@ -23,6 +23,18 @@ app.use(express.static('./'));
 
 const secret = "5tr0n6P@55W0rD";
 
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, 'uploads');
+    },
+    filename: (req, file, callback) => {
+        callback(null, file.fieldname + '-' + Date.now())
+    }
+});
+const upload = multer({ storage: storage});
+const { response } = require('express');
+
 const uri = "mongodb+srv://wanderer:hahaesto123@cluster0.6qswt.mongodb.net/cartDB?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useUnifiedTopology: true}, { useNewUrlParser: true }, { connectTimeoutMS: 30000 }, { keepAlive: 1});
 client.connect(err => {
@@ -49,12 +61,17 @@ app.get('/products', requireLogin, function (req, res) {
 });
 
 app.get('/', requireLogin, function (req, res) {
+    console.log(req.user);
     ejs.renderFile('./pages/main.html', {user: req.user}, null, function(err, str){
         if (err) res.status(503).send(`error when rendering the view: ${err}`); 
         else {
             res.end(str);
         }
     });
+});
+
+app.get('/products', requireLogin, function(req, res) {
+    res.sendFile("./pages/user-products.html", {root: __dirname});    
 });
 
 
@@ -69,6 +86,40 @@ users/:id delete method: To delete a user
 /completePurchase
 */
 
+app.post('/user/register', upload.single('avatar'), (req, res) => {
+    let name = req.body.name;
+    let email = req.body.email;
+    let password = req.body.password;
+
+    avatarObject = {
+        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+        contentType: 'image/jpg'
+    };
+
+    bcrypt.genSalt(10, function (saltError, salt) {
+        if (saltError) {
+          return;
+        } else {
+          bcrypt.hash(password, salt, function(hashError, hash) {
+            if (hashError) {
+              return;
+            }
+  
+            password = hash
+          })
+        }
+    })
+
+    users.insertOne({
+		name: name,
+		email: email,
+		password: password,
+        avatar: avatarObject
+	}, function(err, res) {
+		if (err) throw err;
+		console.log("1 document inserted");
+	});
+});
 
 app.post('/login', async function (req, res) {
     const { email, password } = req.body;
@@ -98,8 +149,8 @@ app.post('/logout', requireLogin, function(req, res){
 //users backend ----------------------------------------------------------------------------------------------
 function generateToken(user) {
     let payload = {
-     username: user.username,
-     id: user.id,
+     name: user.name,
+     id: user._id,
      role: user.role
     };
     let oneDay = 60 * 60 * 24;

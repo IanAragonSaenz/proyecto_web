@@ -1,7 +1,7 @@
 const cart = document.getElementById("cart");
 const totalLabel = document.getElementById("total");
 const btn = document.getElementById("btn");
-btn.addEventListener("click", ()=>{window.location.replace('http://127.0.0.1:3000/root/admin/add');});
+btn.addEventListener("click", ()=>{window.location.replace('http://127.0.0.1:3000/add');});
 		
 products = [];
 class Product{
@@ -27,7 +27,7 @@ getProducts.onreadystatechange = function() {
     updateTotal();
   } 
 }
-getProducts.open("GET", "http://127.0.0.1:3000/root/admin/products", true);
+getProducts.open("GET", "http://127.0.0.1:3000/products", true);
 getProducts.send();
 
 
@@ -55,7 +55,7 @@ function updateList(){
 		btnEdit = document.createElement("button");
         btnEdit.appendChild(document.createTextNode("Edit"));
         btnEdit.addEventListener("click", ()=>{
-			window.location.replace('http://127.0.0.1:3000/root/admin/' + product.id + '/edit');
+			window.location.replace('http://127.0.0.1:3000/' + product.id + '/edit');
         });
 
         let eguzz = document.createElement('br');
@@ -78,7 +78,7 @@ function updateList(){
 function removeProductFromCart(product){
     // find the element
     let idx = products.indexOf(product);
-	let url = 'http://127.0.0.1:3000/root/admin/removeProduct/?id=' + product.id;
+	let url = 'http://127.0.0.1:3000/removeProduct/?id=' + product.id;
     
 	var deleteProduct = new XMLHttpRequest();
 	deleteProduct.onreadystatechange = function() {
@@ -114,11 +114,3 @@ function validate(name, price){
     if (isNaN(price)) return 'A valid price is needed';
     return '';
 }
-
-/* probably not needed
-function duplicatedProduct(name){
-    // productFound = products.find(x => x.name===name);
-    // if (product === undefined) then we did not find anything, so the product is not duplicated
-    // if (productFound !== undefined) then the product is duplicated
-    return products.find(x => x.name===name) !== undefined;
-} */
