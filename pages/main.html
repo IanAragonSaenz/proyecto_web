@@ -8,6 +8,7 @@
 </head>
 <body>
     <input type="button" value="Cart" id="Cart"/>
+    <input type="button" value="Products" id="Products"/>
     <h1>Welcome</h1>
     Welcome <%= user.name %>, you are an <%= user.role %>
 
@@ -39,6 +40,7 @@
     <script>       
         const btnLogout = document.getElementById('logout');
         const btnCart = document.getElementById('Cart');
+        const btnProducts = document.getElementById('Products');
         const userId = '<%= user._id %>';
         console.log('<%= user.email %>')
         const txtName = document.getElementById('txtName');
@@ -60,9 +62,10 @@
         });
 
         btnCart.addEventListener("click", (e) => {
-            alert(`You are moving to the cart`);
             window.location.replace('http://127.0.0.1:3000/cart');
-           
+        });
+        btnProducts.addEventListener("click", (e) => {
+            window.location.replace('http://127.0.0.1:3000/products');
         });
 
         loadUserData();
