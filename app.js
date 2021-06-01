@@ -84,10 +84,9 @@ app.get('/all/products', requireLogin, async function(req, res){
     res.send(products);
 });
 
-app.post('/product/add/:id', requireLogin, async function(req, res){  
+app.post('/product/add/:id/:pid', requireLogin, async function(req, res){  
     let userId  = req.params.id;
-    let pid = req.body.productId;
-    console.log(req.body);
+    let pid = req.params.pid;
     cart.insertOne({
 		uid: userId,
 		pid: pid
@@ -147,7 +146,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
               return;
             }
             password = hash
-          })
+          }) 
         }
     })
 
@@ -164,6 +163,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 });
 
 app.post('/users/:id', upload.single('avatar'), (req, res) => {
+    let uid  = req.params.id;
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
@@ -186,7 +186,7 @@ app.post('/users/:id', upload.single('avatar'), (req, res) => {
         }
     })
 
-    users.update({_id: req.user.id},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
+    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
 		if (err) throw err;
 		console.log("1 document updated");
 	});
