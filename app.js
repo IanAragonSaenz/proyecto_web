@@ -162,7 +162,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 	});
 });
 
-app.post('/users/:id', requireLogin, upload.single('avatar'), (req, res) => {
+app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req, res){
     let uid  = req.params.id;
     let name = req.body.name;
     let email = req.body.email;
@@ -186,7 +186,7 @@ app.post('/users/:id', requireLogin, upload.single('avatar'), (req, res) => {
         }
     })
 
-    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
+    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, async function(err, res) {
 		if (err) throw err;
         const user = await users.findOne({email: email});
         if (user) {
