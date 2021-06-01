@@ -134,7 +134,8 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 		name: name,
 		email: email,
 		password: password,
-        avatar: avatarObject
+        avatar: avatarObject,
+        role: 'user'
 	}, function(err, res) {
 		if (err) throw err;
 		console.log("1 document inserted");

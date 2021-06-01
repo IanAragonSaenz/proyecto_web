@@ -35,7 +35,7 @@
 
             if (email ==='') { alert('Input your email'); return; }
             if (password ==='') { alert('Input your password'); return; }            
-			if (password.length  < 8) { alert('Password needs to be more than 8 characters'); return; }  
+			//if (password.length  < 8) { alert('Password needs to be more than 8 characters'); return; }  
 			
             axios.post('http://127.0.0.1:3000/login', {email: email, password: password})
             .then(response => {

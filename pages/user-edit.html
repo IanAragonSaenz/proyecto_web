@@ -81,9 +81,11 @@
                 txtPassword.value = user.password;
 
                 let stringValue = "data:image/jpg;base64," + (user.avatar.data);
+                console.log(stringValue);
                 imgAvatar.setAttribute('height', 200);
                 imgAvatar.setAttribute('width', 200);
                 imgAvatar.setAttribute('src', stringValue);
+                imgAvatar.setAttribute('alt', 'Red dot');
                 
             })
             .catch(error => {

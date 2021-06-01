@@ -32,6 +32,7 @@
         const txtPassword = document.getElementById('txtPassword');
         const avatarImage = document.getElementById('avatarImage');
         
+
         const btnSubmit = document.getElementById('submit');
         btnSubmit.addEventListener("click", (e) => {
             e.preventDefault();
@@ -43,6 +44,8 @@
             if (name === '') { alert('Input your name'); return; }
             if (email ==='') { alert('Input your email'); return; }
             if (password ==='') { alert('Input your password'); return; }
+            if (password.length < 8) { alert('Password needs to be more than 8 characters'); return; }
+
             
             const formData = new FormData();
             formData.append('name', name);
