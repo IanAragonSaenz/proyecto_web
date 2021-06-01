@@ -91,7 +91,7 @@
             const files = avatarImage.files;
             formData.append('avatar', files[0])
 
-            axios.put(`http://127.0.0.1:3000/user/${userId}`, formData)
+            axios.post(`http://127.0.0.1:3000/users/${userId}`, formData)
             .then(response => {
                 console.log(response);
                 alert(`User updated successfully`);
@@ -112,7 +112,7 @@
                 txtPassword.value = user.password;
 
                 let stringValue = "data:image/jpg;base64," + (user.avatar.data);
-                console.log(stringValue);
+                //console.log(stringValue);
                 imgAvatar.setAttribute('height', 200);
                 imgAvatar.setAttribute('width', 300);
                 imgAvatar.setAttribute('src', stringValue);
