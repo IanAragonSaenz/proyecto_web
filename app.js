@@ -163,7 +163,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 });
 
 app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req, res){
-    let uid  = req.params.id;
+    let uid  = new mongo.ObjectID(req.params.id);
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
@@ -186,18 +186,9 @@ app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req
         }
     })
 
-    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, async function(err, res) {
+    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }},  function(err, res) {
 		if (err) throw err;
-        const user = await users.findOne({email: email});
-        if (user) {
-            console.log(`Succesfully logged ${email} in`);
-            // Generate an access token
-            const accessToken = generateToken(user);
-            res.cookie("authorization", accessToken, {secure: true, httpOnly: true});
-            res.status(200).json(accessToken);
-        }else{
-            res.status(403).send('Invalid credentials');
-        }
+		console.log(name);
 		console.log("1 document updated");
 	});
 });
