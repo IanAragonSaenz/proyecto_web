@@ -10,7 +10,6 @@
     <input type="button" value="Cart" id="Cart"/>
     <input type="button" value="Products" id="Products"/>
     <h1>Welcome</h1>
-    Welcome <%= user.name %>, you are an <%= user.role %>
 
     <h2>Edit your details</h2>
     <form>
@@ -24,8 +23,10 @@
         <input type="password" id="txtPassword"><br>
 
         <label for="imgAvatar">Current avatar:</label>
+        <br>
         <img id="imgAvatar"><br>
         <br>
+
 
         <label for="avatarImage">Update avatar image</label>
         <input type="file" id="avatarImage" name="avatarImage" value="Select image">
@@ -41,8 +42,9 @@
         const btnLogout = document.getElementById('logout');
         const btnCart = document.getElementById('Cart');
         const btnProducts = document.getElementById('Products');
-        const userId = '<%= user._id %>';
-        console.log('<%= user.email %>')
+        const userId = '<%= user.id %>';
+        //console.log(userId);
+        
         const txtName = document.getElementById('txtName');
         const txtEmail = document.getElementById('txtEmail');
         const txtPassword = document.getElementById('txtPassword');
@@ -101,14 +103,27 @@
         });
 
         function loadUserData(){
-            txtName.value = '<%= user.name %>';
-            txtEmail.value = '<%= user.email %>';
-            txtPassword.value = 'secret';
+            axios.get(`http://127.0.0.1:3000/users/${userId}`)
+            .then(response => {
+                console.log(response);
+                let user = response.data
+                txtName.value = user.name;
+                txtEmail.value = user.email;
+                txtPassword.value = user.password;
 
-            let stringValue = "data:image/jpg;base64," + (user.avatar.data);
-            imgAvatar.setAttribute('height', 200);
-            imgAvatar.setAttribute('width', 200);
-            imgAvatar.setAttribute('src', stringValue);
+                let stringValue = "data:image/jpg;base64," + (user.avatar.data);
+                console.log(stringValue);
+                imgAvatar.setAttribute('height', 200);
+                imgAvatar.setAttribute('width', 300);
+                imgAvatar.setAttribute('src', stringValue);
+                imgAvatar.setAttribute('alt', 'Red dot');
+                
+            })
+            .catch(error => {
+                console.log(error);
+                btnSubmit.disabled = true;
+                alert(`Problem when loading data for movie ${error.response.data}`);
+            });
         }
         
     </script>
