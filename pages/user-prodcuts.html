@@ -140,7 +140,8 @@
           btnAdd = document.createElement("button");
           btnAdd.appendChild(document.createTextNode("Add"));
           btnAdd.addEventListener("click", ()=>{
-            let url = 'http://127.0.0.1:3000/product/add?id=' + product.id;
+            
+            let url = 'http://127.0.0.1:3000/product/add/${userId}/?productId=' + product.id;
         
             var addProduct = new XMLHttpRequest();
             addProduct.onreadystatechange = function() {

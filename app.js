@@ -74,7 +74,28 @@ app.get('/products', requireLogin, function(req, res) {
     res.sendFile("./pages/user-products.html", {root: __dirname});    
 });
 
+app.get('/products', requireLogin, async function(req, res){  
+    let products = await collection.find().toArray(); 
+    res.send(products);
+});
 
+app.post('/product/add/:id', requireLogin, async function(req, res){  
+    let userId  = req.params.id;
+    let productId  = req.query.id;
+    let products = await collection.find().toArray(); 
+    res.send(products);
+});
+
+app.post('/removeProduct', requireLogin, function(req, res) {
+
+    let productId  = req.query.id;
+	collection.deleteOne({
+		_id: new mongo.ObjectID(productId)
+	}, function(err, obj) {
+		if (err) throw err;
+		console.log("1 document deleted");
+	});
+})
 /*
 products/:id delete method: To remove a product from the database. --
 
@@ -104,7 +125,6 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
             if (hashError) {
               return;
             }
-  
             password = hash
           })
         }
