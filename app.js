@@ -79,7 +79,31 @@ app.get('/products', requireLogin, function(req, res) {
     });  
 });
 
-app.get('/all/products', requireLogin, async function(req, res){  
+//pages loading backend
+app.get('/root/admin/products', requireAdminLogin, function(req, res) {
+    res.sendFile("./pages/admin-products.html", {root: __dirname});    
+});
+
+app.get('/root/admin/add', requireAdminLogin, function(req, res) {
+    res.sendFile("./pages/add.html", {root: __dirname});    
+});
+
+app.get('/root/admin/edit', requireAdminLogin, function(req, res) {
+	res.sendFile("./pages/edit-product.html", {root: __dirname}); 
+});
+
+app.get('/root/admin/:id/edit', requireAdminLogin, function(req, res) {
+    let productId  = req.params.id;
+    ejs.renderFile("./pages/edit-product.html", {productId: productId}, null, function(err, str){
+        if (err) res.status(503).send(`error when rendering the view: ${err}`); 
+        else {
+            res.end(str);
+        }
+    });
+});
+
+
+app.get('/products/all', requireLogin, async function(req, res){  
     let products = await collection.find().toArray(); 
     res.send(products);
 });
@@ -96,7 +120,7 @@ app.post('/product/add/:id/:pid', requireLogin, async function(req, res){
 	});
 });
 
-app.post('/removeProduct', requireLogin, function(req, res) {
+app.delete('/products', requireLogin, function(req, res) {
 
     let productId  = req.query.id;
 	collection.deleteOne({
@@ -105,26 +129,6 @@ app.post('/removeProduct', requireLogin, function(req, res) {
 		if (err) throw err;
 		console.log("1 document deleted");
 	});
-})
-/*
-products/:id delete method: To remove a product from the database. --
-
-users/create post method: To create a new user in the database.
-users/:id get method: To get the data of a user
-users/:id put method: To modify the data of a user
-users/:id delete method: To delete a user
-
-/completePurchase
-*/
-
-app.get('/users/:id', requireLogin, async function(req, res) {
-    let uid  = req.params.id;
-    let user = await users.find().toArray();
-	user.forEach(u => {
-		if(u._id == uid){
-			res.send(u);
-		}
-	});	
 })
 
 app.post('/clear/:id', requireLogin, async function(req, res) {
@@ -157,6 +161,17 @@ app.post('/cart/:id/:pid', requireLogin, async function(req, res) {
 		if (err) throw err;
 		console.log("1 document deleted");
 	});
+})
+
+
+app.get('/users/:id', requireLogin, async function(req, res) {
+    let uid  = req.params.id;
+    let user = await users.find().toArray();
+	user.forEach(u => {
+		if(u._id == uid){
+			res.send(u);
+		}
+	});	
 })
 
 app.post('/user/register', upload.single('avatar'), (req, res) => {
@@ -197,7 +212,7 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
 
 
 app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req, res){
-    let uid  = req.params.id;
+    let uid  = new mongo.ObjectID(req.params.id);
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
@@ -318,34 +333,6 @@ function requireAdminLogin(req, res, next){
 // Admin functions -----------------------------------------------------------------------------------------------
 //
 
-
-//pages loading backend
-app.get('/root/admin/products', requireAdminLogin, function(req, res) {
-    res.sendFile("./pages/admin-products.html", {root: __dirname});    
-});
-
-app.get('/root/admin/add', requireAdminLogin, function(req, res) {
-    res.sendFile("./pages/add.html", {root: __dirname});    
-});
-
-app.post('/root/admin/edit', requireAdminLogin, function(req, res) {
-	res.sendFile("./pages/edit-product.html", {root: __dirname}); 
-});
-
-app.get('/root/admin/product/:id/edit', requireAdminLogin, function(req, res) {
-    let productId  = req.params.id;
-    ejs.renderFile("./pages/edit-product.html", {productId: productId}, null, function(err, str){
-        if (err) res.status(503).send(`error when rendering the view: ${err}`); 
-        else {
-            res.end(str);
-        }
-    });
-});
-
-
-
-
-
 //products backend
 app.put('/root/admin/product/:id', requireAdminLogin, function(req, res) {
     let productId  = req.params.id;
@@ -367,12 +354,12 @@ app.get('/root/admin/product/:id', requireAdminLogin, async function(req, res) {
 	});	
 })
 
-app.get('/root/admin/products', requireAdminLogin, async function(req, res){  
+app.get('/root/admin/products/all', requireAdminLogin, async function(req, res){  
     let products = await collection.find().toArray(); 
     res.send(products);
 });
 
-app.post('/root/admin/removeProduct', requireAdminLogin, function(req, res) {
+app.delete('/root/admin/products', requireAdminLogin, function(req, res) {
 
     let productId  = req.query.id;
 	collection.deleteOne({

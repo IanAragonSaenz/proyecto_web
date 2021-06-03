@@ -109,6 +109,7 @@
           clearCart();
           products = [];
           updateTotal();
+          alert('You have paid for your cart');
         } 
       } 
       getProducts.open("POST", `http://127.0.0.1:3000/clear/${userId}`, true);

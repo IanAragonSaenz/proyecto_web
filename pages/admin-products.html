@@ -123,7 +123,7 @@
           updateList();
         } 
       }
-      getProducts.open("GET", "http://127.0.0.1:3000/root/admin/products", true);
+      getProducts.open("GET", "http://127.0.0.1:3000/root/admin/products/all", true);
       getProducts.send();
 
 
@@ -150,7 +150,7 @@
           btnEdit = document.createElement("button");
           btnEdit.appendChild(document.createTextNode("Edit"));
           btnEdit.addEventListener("click", ()=>{
-            window.location.replace('http://127.0.0.1:3000/root/admin/' + product.id + '/edit');
+            window.location.replace(`http://127.0.0.1:3000/root/admin/${product.id}/edit`);
           });
 
           let eguzz = document.createElement('br');
@@ -173,7 +173,7 @@
       function removeProductFromCart(product){
         // find the element
         let idx = products.indexOf(product);
-        let url = 'http://127.0.0.1:3000/root/admin/removeProduct/?id=' + product.id;
+        let url = 'http://127.0.0.1:3000/root/admin/products/?id=' + product.id;
           
         var deleteProduct = new XMLHttpRequest();
         deleteProduct.onreadystatechange = function() {
@@ -181,7 +181,7 @@
             console.log(this.responseText);		
           } 
         }
-        deleteProduct.open("POST", url, true);
+        deleteProduct.open("DELETE", url, true);
         deleteProduct.send();
         // remove the element (which position, how many elements)
         products.splice(idx,1);
