@@ -190,7 +190,7 @@
                 txtName.value = user.name;
                 txtEmail.value = user.email;
                 txtPassword.value = '';
-                if (user.avatar.data){
+                if (user.data && user.avatar.data){
                   let stringValue = "data:image/jpg;base64," + (user.avatar.data);
                   //console.log(stringValue);
                   imgAvatar.setAttribute('height', 200);

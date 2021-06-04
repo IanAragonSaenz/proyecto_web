@@ -178,35 +178,38 @@ app.post('/user/register', upload.single('avatar'), (req, res) => {
     let name = req.body.name;
     let email = req.body.email;
     let password = req.body.password;
+    if(req.file){
+        avatarObject = {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            contentType: 'image/jpg'
+        };
+    } else {
+        avatarObject = null;
+    }
 
-    avatarObject = {
-        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-        contentType: 'image/jpg'
-    };
-
-    bcrypt.genSalt(10, function (saltError, salt) {
+    bcrypt.genSalt(10, (saltError, salt) => {
         if (saltError) {
-          return;
+            return;
         } else {
-          bcrypt.hash(password, salt, function(hashError, hash) {
-            if (hashError) {
-              return;
-            }
-            password = hash
-          }) 
+            bcrypt.hash(password, salt, function(hashError, hash) {
+                if (hashError) {
+                    return;
+                }
+                users.insertOne({
+                    name: name,
+                    email: email,
+                    password: hash,
+                    avatar: avatarObject,
+                    role: 'user'
+                }, function(err, res) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                });
+            }) 
         }
     })
 
-    users.insertOne({
-		name: name,
-		email: email,
-		password: password,
-        avatar: avatarObject,
-        role: 'user'
-	}, function(err, res) {
-		if (err) throw err;
-		console.log("1 document inserted");
-	});
+    res.redirect('/login');  
 });
 
 
@@ -230,32 +233,34 @@ app.post('/users/:id', requireLogin, upload.single('avatar'), async function(req
             if (hashError) {
               return;
             }
-            password = hash
+            users.update({_id: uid},  {$set: {name: name, email: email, password: hash, avatar: avatarObject }}, function(err, res) {
+                if (err) throw err;
+                console.log("1 document updated");
+            });
           })
         }
     })
 
-    users.update({_id: uid},  {$set: {name: name, email: email, password: password, avatar: avatarObject }}, function(err, res) {
-		if (err) throw err;
-		console.log("1 document updated");
-	});
+    
 });
 
 app.post('/login', async function (req, res) {
     const { email, password } = req.body;
     const user = await users.findOne({email: email});
-    
-    if(user.password != password){res.status(403).send('Invalid credentials'); return; }
-    
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(403).send('Invalid Email or Password.');
+
     if (user) {
         console.log(`Succesfully logged ${email} in`);
         // Generate an access token
         const accessToken = generateToken(user);
         res.cookie("authorization", accessToken, {secure: true, httpOnly: true});
-        res.status(200).json(accessToken);
+        res.status(200).json(accessToken).redirect('/');
     }else{
         res.status(403).send('Invalid credentials');
     }
+    
 });
 
 app.post('/logout', requireLogin, function(req, res){
