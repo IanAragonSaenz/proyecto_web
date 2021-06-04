@@ -8,12 +8,123 @@
   <title>Login</title>
 </head>
 <body>
+    <style>
+    body{
+      background-image: linear-gradient(to top, #778899 , #2F4F4F);
+      height: 100%;
+      margin: 12px;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      }
+
+    html{
+      height: 100%;
+    }
+
+    h1{
+      font-size: 300%;
+      font-family: "Lucida Console", Monaco, monospace;
+      color: white;
+    }
+    input[type=email]{
+        padding: 12px 20px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        transition: width 0.4s ease-in-out;
+        font-size: 100%;
+    }
+
+     input[type=password]{
+        padding: 12px 20px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        transition: width 0.4s ease-in-out;
+        font-size: 100%;
+    }
+
+    input[type = submit]{
+      background-color: #F0FFFF;
+      border: none;
+      color: black;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      transition-duration: 0.4s;
+    }
+
+     input[type = submit]:hover{
+        opacity: 0.5;
+    }
+
+
+    button{
+      background-color: #1E90FF;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+    button:hover{
+      opacity: 0.5;
+    }
+
+    form{
+        color: white;
+        font-size: 140%;
+    }
+
+    .addButton{
+      background-color: #9932CC;
+      border: none;
+      color: #F0F8FF;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 20px;
+      transition-duration: 0.4s;
+    }
+
+    .removeButton{
+      background-color: #8B0000;
+      border: none;
+      color: #F0F8FF;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+    .reloc{
+      background-color: #F0FFFF;
+      border: none;
+      color: black;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+</style>
     <h1>Enter your credentials</h1>
     <form>
         <label for="txtEmail">Email:</label>
+        <br>
         <input type="email" id="txtEmail"><br>
 
         <label for="txtPassword">Password:</label>
+        <br>
         <input type="password" id="txtPassword"><br>
 
         <br>

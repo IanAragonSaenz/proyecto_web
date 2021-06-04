@@ -40,7 +40,7 @@
       font-family: "Lucida Console", Monaco, monospace;
     }
 
-    button{
+    input[type = button]{
       background-color: #1E90FF;
       border: none;
       color: white;
@@ -48,12 +48,57 @@
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 12px;
+      font-size: 14px;
       transition-duration: 0.4s;
     }
 
-    button:hover{
-      opacity: 0.5;
+     input[type = button]:hover{
+        opacity: 0.5;
+    }
+
+    input[type = submit]{
+      background-color: #F0FFFF;
+      border: none;
+      color: black;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      transition-duration: 0.4s;
+    }
+
+    input[type = submit]:hover{
+        opacity: 0.5;
+    }
+
+    form{
+        color: white;
+        font-size: 140%;
+    }
+
+    input[type=text]{
+        padding: 12px 20px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        transition: width 0.4s ease-in-out;
+        font-size: 100%;
+    }
+
+     input[type=email]{
+        padding: 12px 20px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        transition: width 0.4s ease-in-out;
+        font-size: 100%;
+    }
+
+     input[type=password]{
+        padding: 12px 20px;
+        margin: 6px 0;
+        box-sizing: border-box;
+        transition: width 0.4s ease-in-out;
+        font-size: 100%;
     }
 
     .addButton{
@@ -94,12 +139,15 @@
     <h2>Edit your details</h2>
     <form>
         <label for="txtName">Name:</label>
+        <br>
         <input type="text" id="txtName"><br>
 
         <label for="txtEmail">Email:</label>
+        <br>
         <input type="email" id="txtEmail"><br>
 
         <label for="txtPassword">Password:</label>
+        <br>
         <input type="password" id="txtPassword"><br>
 
         <label for="imgAvatar">Current avatar:</label>
@@ -113,9 +161,8 @@
         <br>
         <input type="submit" id="submit" value="Edit user"> 
     </form>
-
-    <h2>Log out</h2>
-    <input type="button" value="logout" id="logout" />
+    <br>
+    <input type="button" value="Logout" id="logout" />
     
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>       
@@ -190,7 +237,7 @@
                 txtName.value = user.name;
                 txtEmail.value = user.email;
                 txtPassword.value = '';
-                if (user.data && user.avatar.data){
+                if (user.avatar && user.avatar.data){
                   let stringValue = "data:image/jpg;base64," + (user.avatar.data);
                   //console.log(stringValue);
                   imgAvatar.setAttribute('height', 200);

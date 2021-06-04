@@ -81,6 +81,19 @@
       transition-duration: 0.4s;
     }
 
+    .reloc{
+      background-color: #F0FFFF;
+      border: none;
+      color: black;
+      padding: 12px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 12px;
+      transition-duration: 0.4s;
+    }
+
+
   </style>
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -96,8 +109,22 @@
     <h3 id="total">Total: $0.00</h3>
     
 	<button id="btn" class = "payButton">Pay</button>
+  <br>
+  <br>
+  <button id="back" class = "reloc">Back</button>
+  <button id="products" class = "reloc">Products</button>
     
   <script>
+    backbtn = document.getElementById("back");
+    backbtn.addEventListener("click", ()=>{
+      window.location.replace('http://127.0.0.1:3000/');
+
+    });
+
+     prodBtn = document.getElementById("products");
+      prodBtn.addEventListener("click", ()=>{
+        window.location.replace('http://127.0.0.1:3000/products');
+      });
     const userId = '<%= user.id %>';
     const cart = document.getElementById("cart");
     const totalLabel = document.getElementById("total");
